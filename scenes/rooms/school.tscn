@@ -1,33 +1,109 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=4 format=3]
 
-[ext_resource type="Script" path="res://scripts/core/ExplorationScene.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/core/PlayerController.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/rooms/ReactiveScene.gd" id="2"]
+
+[sub_resource type="RectangleShape2D" id="rect_small"]
+size = Vector2(40, 60)
 
 [node name="School" type="Node2D"]
-script = ExtResource("1")
-scene_id = "school"
-scene_name = "Школа №17"
+script = ExtResource("2")
 
-[node name="SceneSprites" type="Node2D" parent="."]
-
-[node name="Background" type="ColorRect" parent="SceneSprites"]
+[node name="Background" type="ColorRect" parent="."]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 color = Color(0.2, 0.18, 0.15, 1.0)
 
-[node name="SchoolBuilding" type="Sprite2D" parent="SceneSprites"]
-position = Vector2(960, 540)
-metadata/_depends_on = "school_exists"
+[node name="Label" type="Label" parent="."]
+position = Vector2(20, 20)
+text = "ШКОЛА №17"
+theme_override_font_sizes/font_size = 28
+theme_override_colors/font_color = Color(0.9, 0.85, 0.8, 1.0)
 
-[node name="Lera" type="Sprite2D" parent="SceneSprites"]
-position = Vector2(600, 500)
+[node name="SchoolBuilding" type="ColorRect" parent="."]
+position = Vector2(300, 200)
+size = Vector2(600, 300)
+color = Color(0.25, 0.2, 0.15, 1.0)
+
+[node name="SchoolLabel" type="Label" parent="SchoolBuilding"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+text = "🏫 Школа №17\n(существует)"
+horizontal_alignment = 1
+vertical_alignment = 1
+theme_override_font_sizes/font_size = 22
+
+[node name="Lera" type="ColorRect" parent="."]
 metadata/_depends_on = "lera_exists"
+position = Vector2(400, 400)
+size = Vector2(40, 60)
+color = Color(0.75, 0.5, 0.4, 1.0)
 
-[node name="Artyom" type="Sprite2D" parent="SceneSprites"]
-position = Vector2(1200, 500)
+[node name="LeraLabel" type="Label" parent="Lera"]
+position = Vector2(-15, 65)
+text = "Лера"
+theme_override_font_sizes/font_size = 11
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(1, 0.9, 0.7, 1.0)
+
+[node name="LeraBadge" type="Label" parent="Lera"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+text = "Л"
+horizontal_alignment = 1
+vertical_alignment = 1
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(1, 0.9, 0.8, 1.0)
+
+[node name="Artyom" type="ColorRect" parent="."]
 metadata/_depends_on = "artyom_exists"
+position = Vector2(600, 400)
+size = Vector2(40, 64)
+color = Color(0.5, 0.4, 0.65, 1.0)
 
-[node name="NPCs" type="Node2D" parent="."]
+[node name="ArtyomLabel" type="Label" parent="Artyom"]
+position = Vector2(-15, 68)
+text = "Артём"
+theme_override_font_sizes/font_size = 11
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.8, 0.8, 1, 1.0)
+
+[node name="ArtyomBadge" type="Label" parent="Artyom"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+text = "А"
+horizontal_alignment = 1
+vertical_alignment = 1
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(0.8, 0.8, 1, 1.0)
 
 [node name="Player" type="CharacterBody2D" parent="."]
-position = Vector2(960, 700)
+position = Vector2(500, 550)
+script = ExtResource("1")
+
+[node name="PlayerSprite" type="ColorRect" parent="Player"]
+position = Vector2(-20, -30)
+size = Vector2(40, 60)
+color = Color(0.3, 0.5, 0.8, 1.0)
+
+[node name="PlayerLabel" type="Label" parent="Player/PlayerSprite"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+text = "Я"
+horizontal_alignment = 1
+vertical_alignment = 1
+theme_override_colors/font_color = Color(1, 1, 1, 0.8)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
+shape = SubResource("rect_small")
+
+[node name="HintLabel" type="Label" parent="."]
+position = Vector2(20, 60)
+text = "WASD — движение  |  Вернись к ноутбуку чтобы менять мир"
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.5, 0.5, 0.6, 1.0)

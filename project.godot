@@ -1,6 +1,6 @@
 ; Engine configuration file.
 ; It's best edited using the editor UI and not directly,
-; since the parameters that go here are not obvious.
+; since the parameters that go here are not all obvious.
 ;
 ; Format:
 ;   [section] ; section goes between []
@@ -13,8 +13,13 @@ config_version=5
 config/name="Черновик"
 config/description="Ты нашёл ноутбук. На нём открыт документ под названием «Черновик мира». Если удалить строчку — она исчезает из реальности. Если добавить — появляется."
 config/version="0.1.0"
-run/main_scene="res://scenes/main.tscn"
+run/main_scene="res://scenes/ui/main_menu.tscn"
+config/features=PackedStringArray("4.6")
 config/icon="res://assets/sprites/icon.svg"
+
+[audio]
+
+general/default_playback_type=1
 
 [autoload]
 
@@ -31,22 +36,10 @@ SaveManager="*res://scripts/autoload/SaveManager.gd"
 
 window/size/viewport_width=1920
 window/size/viewport_height=1080
-window/size/resizable=true
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 
 [rendering]
 
-renderer/rendering_method="gl_compatibility"
 textures/canvas_textures/default_texture_filter=0
-
-[gui]
-
-
-[input_devices]
-
-pointing/emulate_touch_from_mouse=false
-
-[audio]
-
-general/default_playback_type=1
+renderer/rendering_method="gl_compatibility"

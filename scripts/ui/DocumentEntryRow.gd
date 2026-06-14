@@ -1,13 +1,12 @@
 extends HBoxContainer
 ## Single row in the document editor.
-## Shows entry text + delete button.
 
 signal delete_requested(key: String)
 signal edit_requested(key: String, new_text: String)
 
 @onready var text_label: Label = %TextLabel
 @onready var delete_button: Button = %DeleteButton
-@onready var lock_icon: TextureRect = %LockIcon
+@onready var lock_icon: Control = %LockIcon
 
 var entry_key: String = ""
 var is_locked: bool = false
@@ -23,7 +22,6 @@ func setup(key: String, text: String, active: bool, locked: bool) -> void:
 	delete_button.visible = not locked
 	lock_icon.visible = locked
 
-	# Visual state
 	if not active:
 		modulate = Color(0.5, 0.5, 0.5, 0.5)
 

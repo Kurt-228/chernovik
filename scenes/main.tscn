@@ -1,24 +1,24 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene format=3 uid="uid://dye8ieht8ih4r"]
 
-[ext_resource type="Script" path="res://scripts/core/SceneManager.gd" id="1"]
-[ext_resource type="Script" path="res://scripts/ui/DialogueOverlay.gd" id="2"]
+[ext_resource type="Script" uid="uid://bi7b1vshfnftv" path="res://scripts/core/SceneManager.gd" id="1"]
+[ext_resource type="Script" uid="uid://cekgvdt83u0rw" path="res://scripts/ui/DialogueOverlay.gd" id="2"]
 
-[node name="Main" type="Node"]
+[node name="Main" type="Node" unique_id=2038153327]
 script = ExtResource("1")
 
-[node name="TransitionRect" type="ColorRect" parent="."]
+[node name="TransitionRect" type="ColorRect" parent="." unique_id=592154764]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0, 0, 0, 0)
 mouse_filter = 2
+color = Color(0, 0, 0, 0)
 
-[node name="DialogueOverlay" type="CanvasLayer" parent="."]
+[node name="DialogueOverlay" type="CanvasLayer" parent="." unique_id=1493908056]
 script = ExtResource("2")
 
-[node name="DialogueBox" type="Panel" parent="DialogueOverlay" node_paths=PackedStringArray("SpeakerName", "DialogueText", "CharacterPortrait", "ContinueIndicator", "ChoicesContainer")]
+[node name="DialogueBox" type="Panel" parent="DialogueOverlay" unique_id=531354232]
 unique_name_in_owner = true
 visible = false
 anchors_preset = 15
@@ -29,7 +29,7 @@ offset_bottom = 1080.0
 grow_horizontal = 2
 grow_vertical = 0
 
-[node name="SpeakerName" type="Label" parent="DialogueOverlay/DialogueBox"]
+[node name="SpeakerName" type="Label" parent="DialogueOverlay/DialogueBox" unique_id=644481134]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 120.0
@@ -38,7 +38,7 @@ offset_right = 600.0
 offset_bottom = 50.0
 text = "Имя"
 
-[node name="DialogueText" type="RichTextLabel" parent="DialogueOverlay/DialogueBox"]
+[node name="DialogueText" type="RichTextLabel" parent="DialogueOverlay/DialogueBox" unique_id=1866100093]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 120.0
@@ -50,7 +50,7 @@ text = "Текст диалога..."
 fit_content = true
 scroll_active = false
 
-[node name="CharacterPortrait" type="TextureRect" parent="DialogueOverlay/DialogueBox"]
+[node name="CharacterPortrait" type="TextureRect" parent="DialogueOverlay/DialogueBox" unique_id=980880974]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 10.0
@@ -58,20 +58,20 @@ offset_top = 10.0
 offset_right = 110.0
 offset_bottom = 260.0
 
-[node name="ContinueIndicator" type="Control" parent="DialogueOverlay/DialogueBox"]
+[node name="ContinueIndicator" type="Control" parent="DialogueOverlay/DialogueBox" unique_id=295339931]
 unique_name_in_owner = true
 visible = false
-layout_mode = 0
+anchors_preset = 0
 offset_left = 1820.0
 offset_top = 300.0
 offset_right = 1900.0
 offset_bottom = 320.0
 
-[node name="Arrow" type="Label" parent="DialogueOverlay/DialogueBox/ContinueIndicator"]
+[node name="Arrow" type="Label" parent="DialogueOverlay/DialogueBox/ContinueIndicator" unique_id=2039983039]
 layout_mode = 0
 text = "▼"
 
-[node name="ChoicesContainer" type="VBoxContainer" parent="DialogueOverlay/DialogueBox"]
+[node name="ChoicesContainer" type="VBoxContainer" parent="DialogueOverlay/DialogueBox" unique_id=518279155]
 unique_name_in_owner = true
 visible = false
 layout_mode = 0

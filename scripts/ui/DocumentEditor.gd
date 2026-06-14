@@ -142,6 +142,8 @@ func _generate_unique_key(text: String) -> String:
 func _on_close_pressed() -> void:
 	AudioManager.play_sfx(AudioManager.SFX.NOTEBOOK_CLOSE)
 	EventBus.document_closed.emit()
+	# Free self — caller cleans up its reference
+	queue_free()
 
 
 ## ── EFFECTS / UI ───────────────────────────────────────────────────
