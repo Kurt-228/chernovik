@@ -25,6 +25,7 @@ AudioManager="*res://scripts/autoload/AudioManager.gd"
 EventBus="*res://scripts/autoload/EventBus.gd"
 GameProgress="*res://scripts/autoload/GameProgress.gd"
 CharacterManager="*res://scripts/core/CharacterManager.gd"
+SaveManager="*res://scripts/autoload/SaveManager.gd"
 
 [display]
 

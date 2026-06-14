@@ -1,4 +1,4 @@
-# Черновик (Draft) v0.1.0
+# Черновик (Draft) v0.1.1
 
 **Жанр:** Визуальная новелла-песочница с элементами хоррора
 **Движок:** Godot 4.6
@@ -7,120 +7,84 @@
 ## Концепция
 
 Ты находишь старый ноутбук. На нём открыт документ «Черновик мира».
-В нём записано всё: люди, события, воспоминания, законы физики.
-Удали строчку — она исчезнет из реальности.
-Добавь новую — появится.
+Удали строчку — она исчезнет из реальности. Добавь новую — появится.
+Мир сопротивляется изменениям.
 
-Проблема в том, что мир сопротивляется изменениям.
+## Архитектура
+
+### Поток данных (v0.1.1 — EventBus-only)
+
+```
+DocumentEditor  ──► WorldState ──► EventBus ──► Consequences
+     ▲                  ▲              │              │
+     │                  │              ├──► GameProgress
+     └── UI refresh ◄───┘              ├──► CharacterManager
+                                       └──► MetaMemory
+```
+
+**Правило:** WorldState НЕ вызывает Consequences напрямую. Всё через EventBus.
+
+### Soft-delete модель
+
+Удалённые строки НЕ стираются из памяти — они помечаются `active=false, hidden=true`.
+Это позволяет:
+- ErrorPerson'ам помнить удалённые версии мира
+- MetaMemory отслеживать историю правок
+- Потенциально "восстанавливать" удалённые строки
+
+### Соглашение об именах событий
+
+`verb_object` — единый стиль: `erased_lera`, `removed_crime`, `destroyed_school`.
+Никаких `lera_exists_removed`.
 
 ## Структура проекта
 
 ```
 chernovik/
-├── project.godot              # Конфигурация Godot
+├── project.godot
 ├── scenes/
-│   ├── main.tscn              # Главная сцена (SceneManager + DialogueOverlay)
-│   ├── rooms/                 # Игровые локации
-│   │   ├── bedroom.tscn       # Комната Максима
-│   │   ├── school.tscn        # Школа №17
-│   │   ├── city_square.tscn   # Центральная площадь
-│   │   ├── abandoned_apartment.tscn  # Заброшенная квартира
-│   │   └── street.tscn        # Улица Мира
-│   ├── characters/
-│   │   └── error_person.tscn  # «Ошибка» — помнит прошлые версии мира
-│   ├── ui/
-│   │   ├── document_editor.tscn      # Главный UI — редактор документа
-│   │   ├── document_entry_row.tscn   # Одна строка документа
-│   │   ├── dialogue_choice_button.tscn
-│   │   ├── main_menu.tscn
-│   │   └── ending_screen.tscn
-│   └── world/
-│       └── void.tscn          # Пустота (финал)
+│   ├── main.tscn
+│   ├── rooms/           (bedroom, school, city_square, abandoned_apartment, street)
+│   ├── characters/      (error_person.tscn)
+│   ├── ui/              (document_editor, dialogue, ending_screen, main_menu)
+│   └── world/           (void.tscn)
 ├── scripts/
-│   ├── autoload/              # Синглтоны (загружаются при старте)
-│   │   ├── WorldState.gd      # Ядро — состояние мира
-│   │   ├── Consequences.gd    # Система правил/последствий
-│   │   ├── MetaMemory.gd      # Память между прохождениями
-│   │   ├── GameProgress.gd    # Прогресс по сюжету
-│   │   ├── AudioManager.gd    # Музыка и звуки
-│   │   └── EventBus.gd        # Глобальная шина событий
-│   ├── core/
-│   │   ├── SceneManager.gd    # Переключение сцен
-│   │   ├── ExplorationScene.gd # Базовая сцена исследования
-│   │   └── CharacterManager.gd # Управление персонажами
-│   ├── ui/
-│   │   ├── DocumentEditor.gd  # Логика редактора документа
-│   │   ├── DocumentEntryRow.gd # Логика строки документа
-│   │   ├── DialogueOverlay.gd # Оверлей диалогов (VN-style)
-│   │   ├── DialogueChoiceButton.gd
-│   │   ├── MainMenu.gd
-│   │   └── EndingScreen.gd
-│   └── characters/
-│       └── ErrorPerson.gd     # Логика «Ошибок»
-├── assets/
-│   ├── sprites/               # Графика
-│   ├── music/                 # Музыка
-│   ├── sounds/                # Звуковые эффекты
-│   └── fonts/                 # Шрифты
-└── resources/
-    ├── dialogues/             # JSON-файлы диалогов
-    ├── consequences/          # Таблицы правил последствий
-    └── world_entries/         # Стартовые наборы строк мира
+│   ├── autoload/        (WorldState, Consequences, MetaMemory, GameProgress,
+│   │                     AudioManager, EventBus, SaveManager)
+│   ├── core/            (SceneManager, ExplorationScene, CharacterManager)
+│   ├── ui/              (DocumentEditor, DialogueOverlay, EndingScreen, MainMenu)
+│   └── characters/      (ErrorPerson)
+├── assets/              (sprites, music, sounds, fonts)
+└── resources/           (dialogues, consequences, world_entries)
 ```
 
-## Архитектура
+## Что готово (v0.1.1)
 
-### Ядро — WorldState
-Все «строки документа» хранятся в синглтоне `WorldState`.
-Когда игрок удаляет строку → `WorldState.remove_entry(key)` → Consequences вычисляет цепочку эффектов → другие системы реагируют через EventBus.
+- [x] Ядро: WorldState (soft-delete), Consequences (EventBus + recursion guard)
+- [x] UI редактора документа с подключёнными сигналами удаления
+- [x] Мета-память с унифицированным именованием событий
+- [x] Save/Load система (SaveManager)
+- [x] Проверка уникальности ключей при добавлении строк
+- [x] Guard от рекурсивного каскада последствий
+- [x] Система персонажей и «Ошибок»
+- [x] Сцены локаций
+- [x] Экран концовок
+- [x] Главное меню
 
-### Система последствий
-Каждое действие запускает каскад:
-- **Немедленные:** добавить/удалить другие строки сразу
-- **Отложенные:** эффект происходит через N правок («экономика рухнула не сразу»)
+## Что дальше
 
-### Мета-память
-`MetaMemory` сохраняет информацию о всех прохождениях в `user://meta/runs.json`.
-Персонажи могут ссылаться на события из прошлых прохождений.
-
-### «Ошибки»
-`ErrorPerson` получает снапшот мира из определённого момента истории правок.
-Сравнивает его с текущим состоянием — и реагирует соответственно.
+- [ ] Графика: спрайты, фоны, портреты
+- [ ] Музыка и звуки
+- [ ] Диалоги: JSON-файлы для сцен
+- [ ] Тестирование петли геймплея
+- [ ] Управление персонажем в exploration-сценах
+- [ ] Интеграция открытия документа по клику на ноутбук
 
 ## Запуск
 
 ```bash
 cd ~/chernovik
 godot --editor
-```
-
-Или запустить игру сразу:
-```bash
+# или:
 godot ~/chernovik/project.godot
 ```
-
-## Что готово
-
-- [x] Архитектура ядра (WorldState, Consequences, EventBus)
-- [x] Система мета-памяти (MetaMemory)
-- [x] Прогресс по сюжету (GameProgress)
-- [x] Аудио-менеджер (AudioManager)
-- [x] UI редактора документа (DocumentEditor + DocumentEntryRow)
-- [x] Система диалогов (DialogueOverlay)
-- [x] Управление персонажами (CharacterManager)
-- [x] Система «Ошибок» (ErrorPerson)
-- [x] Сцены локаций (bedroom, school, city_square, abandoned_apartment, street)
-- [x] Экран концовок (EndingScreen)
-- [x] Главное меню (MainMenu)
-
-## Что дальше (MVP)
-
-- [ ] Графика: спрайты персонажей, фоны, иконки
-- [ ] Музыка и звуки: создание/поиск ассетов
-- [ ] Диалоги: написание JSON-файлов для сцен
-- [ ] Сохранение/загрузка
-- [ ] Настройка аудио-шин в Godot
-- [ ] Тестирование геймплейной петли
-- [ ] Портирование на Ren'Py-подобный визуальный стиль (портреты, текстовое окно)
-
-

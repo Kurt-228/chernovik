@@ -94,7 +94,8 @@ func _on_entry_added(key: String) -> void:
 func is_visible(char_id: String) -> bool:
 	if not characters.has(char_id):
 		return false
-	return characters[char_id].visible
+	var char = characters[char_id]
+	return char.visible and WorldState.is_active(char.depends_on)
 
 
 ## Get character info
