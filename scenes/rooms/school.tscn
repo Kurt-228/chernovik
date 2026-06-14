@@ -1,0 +1,33 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/core/ExplorationScene.gd" id="1"]
+
+[node name="School" type="Node2D"]
+script = ExtResource("1")
+scene_id = "school"
+scene_name = "Школа №17"
+
+[node name="SceneSprites" type="Node2D" parent="."]
+
+[node name="Background" type="ColorRect" parent="SceneSprites"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.2, 0.18, 0.15, 1.0)
+
+[node name="SchoolBuilding" type="Sprite2D" parent="SceneSprites"]
+position = Vector2(960, 540)
+metadata/_depends_on = "school_exists"
+
+[node name="Lera" type="Sprite2D" parent="SceneSprites"]
+position = Vector2(600, 500)
+metadata/_depends_on = "lera_exists"
+
+[node name="Artyom" type="Sprite2D" parent="SceneSprites"]
+position = Vector2(1200, 500)
+metadata/_depends_on = "artyom_exists"
+
+[node name="NPCs" type="Node2D" parent="."]
+
+[node name="Player" type="CharacterBody2D" parent="."]
+position = Vector2(960, 700)

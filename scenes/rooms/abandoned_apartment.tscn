@@ -1,0 +1,25 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/core/ExplorationScene.gd" id="1"]
+
+[node name="AbandonedApartment" type="Node2D"]
+script = ExtResource("1")
+scene_id = "abandoned_apartment"
+scene_name = "Заброшенная квартира"
+
+[node name="SceneSprites" type="Node2D" parent="."]
+
+[node name="Background" type="ColorRect" parent="SceneSprites"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.08, 0.06, 0.1, 1.0)
+
+[node name="Laptop" type="Sprite2D" parent="SceneSprites"]
+position = Vector2(960, 540)
+metadata/_depends_on = "document_found"
+
+[node name="NPCs" type="Node2D" parent="."]
+
+[node name="Player" type="CharacterBody2D" parent="."]
+position = Vector2(960, 700)

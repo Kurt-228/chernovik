@@ -1,0 +1,29 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/core/ExplorationScene.gd" id="1"]
+
+[node name="CitySquare" type="Node2D"]
+script = ExtResource("1")
+scene_id = "city_square"
+scene_name = "Центральная площадь"
+
+[node name="SceneSprites" type="Node2D" parent="."]
+
+[node name="Background" type="ColorRect" parent="SceneSprites"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.25, 0.28, 0.3, 1.0)
+
+[node name="Billboard" type="Sprite2D" parent="SceneSprites"]
+position = Vector2(800, 300)
+metadata/_depends_on = "billboard_exists"
+
+[node name="BusStop" type="Sprite2D" parent="SceneSprites"]
+position = Vector2(1400, 600)
+metadata/_depends_on = "old_bus_stop"
+
+[node name="NPCs" type="Node2D" parent="."]
+
+[node name="Player" type="CharacterBody2D" parent="."]
+position = Vector2(960, 700)

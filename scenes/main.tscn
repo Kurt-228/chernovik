@@ -1,0 +1,81 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/core/SceneManager.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/ui/DialogueOverlay.gd" id="2"]
+
+[node name="Main" type="Node"]
+script = ExtResource("1")
+
+[node name="TransitionRect" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0)
+mouse_filter = 2
+
+[node name="DialogueOverlay" type="CanvasLayer" parent="."]
+script = ExtResource("2")
+
+[node name="DialogueBox" type="Panel" parent="DialogueOverlay" node_paths=PackedStringArray("SpeakerName", "DialogueText", "CharacterPortrait", "ContinueIndicator", "ChoicesContainer")]
+unique_name_in_owner = true
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 700.0
+offset_bottom = 1080.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="SpeakerName" type="Label" parent="DialogueOverlay/DialogueBox"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 120.0
+offset_top = 20.0
+offset_right = 600.0
+offset_bottom = 50.0
+text = "Имя"
+
+[node name="DialogueText" type="RichTextLabel" parent="DialogueOverlay/DialogueBox"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 120.0
+offset_top = 60.0
+offset_right = 1800.0
+offset_bottom = 250.0
+bbcode_enabled = true
+text = "Текст диалога..."
+fit_content = true
+scroll_active = false
+
+[node name="CharacterPortrait" type="TextureRect" parent="DialogueOverlay/DialogueBox"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 110.0
+offset_bottom = 260.0
+
+[node name="ContinueIndicator" type="Control" parent="DialogueOverlay/DialogueBox"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+offset_left = 1820.0
+offset_top = 300.0
+offset_right = 1900.0
+offset_bottom = 320.0
+
+[node name="Arrow" type="Label" parent="DialogueOverlay/DialogueBox/ContinueIndicator"]
+layout_mode = 0
+text = "▼"
+
+[node name="ChoicesContainer" type="VBoxContainer" parent="DialogueOverlay/DialogueBox"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+offset_left = 120.0
+offset_top = 260.0
+offset_right = 1800.0
+offset_bottom = 350.0
