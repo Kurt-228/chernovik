@@ -35,6 +35,8 @@ func _ready() -> void:
 	EventBus.world_version_changed.connect(func(_from_version: int, _to_version: int): _update_stats())
 	EventBus.save_icon_shown.connect(func(): _show_message("Сохранено"))
 	EventBus.world_message_shown.connect(_show_message)
+	EventBus.document_opened.connect(func(): visible = false)
+	EventBus.document_closed.connect(func(): visible = GameProgress.current_chapter != GameProgress.Chapter.ENDING)
 	EventBus.ending_reached.connect(func(_id): visible = false)
 	_update_stats()
 

@@ -7,7 +7,9 @@ extends Node
 var current_scene_id: String = ""
 var current_scene_node: Node = null
 var previous_scene_id: String = ""
+var document_layer: CanvasLayer = null
 var document_overlay: Control = null
+var ending_layer: CanvasLayer = null
 var ending_overlay: Control = null
 var _error_scenes_spawned: Array[String] = []
 
@@ -79,12 +81,29 @@ func open_document() -> void:
 	var doc_path = SCENES["document"]
 	var packed = load(doc_path)
 	if packed:
+		document_layer = CanvasLayer.new()
+		document_layer.name = "DocumentLayer"
+		document_layer.layer = 10
+		add_child(document_layer)
 		document_overlay = packed.instantiate()
 		document_overlay.name = "DocumentOverlay"
-		document_overlay.tree_exited.connect(func(): document_overlay = null)
-		add_child(document_overlay)
+		document_overlay.tree_exited.connect(_on_document_overlay_closed)
+		document_layer.add_child(document_overlay)
 		EventBus.document_opened.emit()
 		print("[SceneManager] Document opened")
+
+
+func close_document() -> void:
+	if document_overlay and is_instance_valid(document_overlay):
+		EventBus.document_closed.emit()
+		document_overlay.queue_free()
+
+
+func _on_document_overlay_closed() -> void:
+	document_overlay = null
+	if document_layer and is_instance_valid(document_layer):
+		document_layer.queue_free()
+	document_layer = null
 
 
 func _on_ending_reached(ending_id: String) -> void:
@@ -98,8 +117,12 @@ func _on_ending_reached(ending_id: String) -> void:
 		push_error("[SceneManager] Failed to load ending screen")
 		return
 
+	ending_layer = CanvasLayer.new()
+	ending_layer.name = "EndingLayer"
+	ending_layer.layer = 20
+	add_child(ending_layer)
 	ending_overlay = packed.instantiate()
-	add_child(ending_overlay)
+	ending_layer.add_child(ending_overlay)
 	ending_overlay.show_ending(ending_id)
 
 
@@ -238,6 +261,16 @@ func _dialogue_once(id: String, character_id: String, text: String) -> void:
 func _start_dialogue(character_id: String, text: String) -> void:
 	if dialogue_overlay and dialogue_overlay.has_method("start_dialogue"):
 		dialogue_overlay.start_dialogue(character_id, text)
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.echo:
+		if event.keycode == KEY_ESCAPE and document_overlay and is_instance_valid(document_overlay):
+			close_document()
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_F and not document_overlay:
+			open_document()
+			get_viewport().set_input_as_handled()
 
 
 func _fade_out(duration: float) -> void:
