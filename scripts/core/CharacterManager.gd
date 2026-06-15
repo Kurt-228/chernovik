@@ -82,7 +82,7 @@ func _on_entry_removed(key: String) -> void:
 			print("[CharacterManager] %s DISAPPEARED" % characters[char_id].name)
 
 
-func _on_entry_added(key: String) -> void:
+func _on_entry_added(key: String, _text: String = "") -> void:
 	for char_id in characters:
 		if characters[char_id].depends_on == key:
 			characters[char_id].visible = true

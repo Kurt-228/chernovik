@@ -29,9 +29,10 @@ enum Ending {
 
 var current_chapter: Chapter = Chapter.PROLOGUE
 var current_day: int = 1
-var edits_before_nina: int = 3
-var edits_before_errors: int = 8
-var edits_before_truth: int = 15
+var current_scene_id: String = "bedroom"
+var edits_before_nina: int = 2
+var edits_before_errors: int = 5
+var edits_before_truth: int = 12
 var ending_achieved: Ending = Ending.NONE
 
 # Flags
@@ -47,9 +48,8 @@ var dialogue_seen: Dictionary = {}
 
 
 func _ready() -> void:
-	# 🔥 FIX #3: listen to EventBus, not WorldState directly
 	EventBus.world_entry_removed.connect(_on_edit_made)
-	EventBus.world_entry_added.connect(_on_edit_made)
+	EventBus.world_entry_added.connect(func(key: String, _text: String): _on_edit_made(key))
 	EventBus.world_entry_modified.connect(func(_k,_o,_n): _on_edit_made(""))
 
 
@@ -108,10 +108,13 @@ func has_seen_dialogue(id: String) -> bool:
 
 
 func trigger_ending(ending: Ending) -> void:
+	if current_chapter == Chapter.ENDING and ending_achieved != Ending.NONE:
+		return
 	ending_achieved = ending
 	current_chapter = Chapter.ENDING
 	var ending_str = _ending_to_string(ending)
 	MetaMemory.record_ending(ending_str)
+	EventBus.ending_reached.emit(ending_str)
 	print("[GameProgress] Ending: %s" % ending_str)
 
 
@@ -130,6 +133,7 @@ func _ending_to_string(e: Ending) -> String:
 func reset_progress() -> void:
 	current_chapter = Chapter.PROLOGUE
 	current_day = 1
+	current_scene_id = "bedroom"
 	ending_achieved = Ending.NONE
 	first_anomaly_seen = false
 	notebook_found = false

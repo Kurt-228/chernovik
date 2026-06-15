@@ -11,6 +11,17 @@ extends Control
 @onready var save_indicator: ColorRect = %SaveIndicator
 @onready var glitch_overlay: ColorRect = %GlitchOverlay
 @onready var close_button: Button = %CloseButton
+@onready var quick_summer_button: Button = %QuickSummerButton
+@onready var quick_rich_button: Button = %QuickRichButton
+@onready var quick_teacher_button: Button = %QuickTeacherButton
+@onready var quick_truth_button: Button = %QuickTruthButton
+@onready var quick_health_button: Button = %QuickHealthButton
+@onready var quick_perfect_button: Button = %QuickPerfectButton
+@onready var quick_obey_button: Button = %QuickObeyButton
+@onready var final_bar: HBoxContainer = %FinalBar
+@onready var author_button: Button = %AuthorButton
+@onready var freedom_button: Button = %FreedomButton
+@onready var void_button: Button = %VoidButton
 
 const ENTRY_ROW_SCENE = preload("res://scenes/ui/document_entry_row.tscn")
 
@@ -28,6 +39,16 @@ func _ready() -> void:
 	add_button.pressed.connect(_on_add_pressed)
 	close_button.pressed.connect(_on_close_pressed)
 	add_line_edit.text_submitted.connect(func(_t): _on_add_pressed())
+	quick_summer_button.pressed.connect(func(): _add_known_entry("eternal_summer", "В городе наступило вечное лето"))
+	quick_rich_button.pressed.connect(func(): _add_known_entry("maxim_rich", "Максим стал богатым"))
+	quick_teacher_button.pressed.connect(func(): _add_known_entry("teacher_returned", "Пропавший учитель вернулся в школу"))
+	quick_truth_button.pressed.connect(func(): _add_known_entry("author_revealed", "Автор документа раскрыт"))
+	quick_health_button.pressed.connect(func(): _remove_known_entry("disease_exists"))
+	quick_perfect_button.pressed.connect(func(): _add_known_entry("perfect_city", "Город стал идеальным"))
+	quick_obey_button.pressed.connect(func(): _add_known_entry("all_obey_maxim", "Все жители города подчиняются Максиму"))
+	author_button.pressed.connect(func(): GameProgress.trigger_ending(GameProgress.Ending.AUTHOR))
+	freedom_button.pressed.connect(func(): GameProgress.trigger_ending(GameProgress.Ending.FREEDOM))
+	void_button.pressed.connect(_delete_everything)
 
 	_refresh_entries()
 	_update_header()
@@ -44,7 +65,6 @@ func _refresh_entries() -> void:
 		var row := ENTRY_ROW_SCENE.instantiate()
 		entries_container.add_child(row)
 		row.setup(entry.key, entry.text, entry.active, entry.locked)
-		# 🔥 CRITICAL FIX #1: connect signals!
 		row.delete_requested.connect(_on_entry_delete_requested)
 		row.edit_requested.connect(_on_entry_edit_requested)
 
@@ -65,6 +85,7 @@ func _on_world_changed(_arg1 := "", _arg2 := "") -> void:
 func _update_header() -> void:
 	title_label.text = "Черновик_мира_v%d.doc" % WorldState.current_version
 	version_label.text = "Версия: %d  |  Правок: %d" % [WorldState.current_version, WorldState.edits_made]
+	final_bar.visible = GameProgress.truth_revealed or WorldState.is_active("maxim_truth_revealed")
 
 
 ## ── DELETE ENTRY ───────────────────────────────────────────────────
@@ -93,7 +114,7 @@ func _on_entry_delete_requested(key: String) -> void:
 	# UI
 	_refresh_entries()
 	_update_header()
-	_save_flash()
+	SaveManager.quick_save()
 
 	_check_endings()
 
@@ -105,6 +126,7 @@ func _on_entry_edit_requested(key: String, new_text: String) -> void:
 	Consequences.process_delayed()
 	_refresh_entries()
 	_update_header()
+	SaveManager.quick_save()
 
 
 ## ── ADD ENTRY ──────────────────────────────────────────────────────
@@ -114,7 +136,6 @@ func _on_add_pressed() -> void:
 	if text.is_empty():
 		return
 
-	# 🔥 FIX #9: generate unique key with collision avoidance
 	var key = _generate_unique_key(text)
 	WorldState.add_entry(key, text)
 
@@ -123,7 +144,34 @@ func _on_add_pressed() -> void:
 	_refresh_entries()
 	_update_header()
 	AudioManager.play_sfx(AudioManager.SFX.KEY_CLICK)
-	_save_flash()
+	SaveManager.quick_save()
+
+
+func _add_known_entry(key: String, text: String) -> void:
+	if WorldState.is_active(key):
+		EventBus.world_message_shown.emit("Эта строка уже есть в мире")
+		return
+	WorldState.add_entry(key, text)
+	Consequences.process_delayed()
+	_refresh_entries()
+	_update_header()
+	AudioManager.trigger_glitch(0.2)
+	SaveManager.quick_save()
+	_check_endings()
+
+
+func _remove_known_entry(key: String) -> void:
+	if not WorldState.is_active(key):
+		EventBus.world_message_shown.emit("Эта строка уже удалена")
+		return
+	_record_deletion_event(key)
+	WorldState.remove_entry(key)
+	Consequences.process_delayed()
+	_refresh_entries()
+	_update_header()
+	AudioManager.trigger_glitch(0.25)
+	SaveManager.quick_save()
+	_check_endings()
 
 
 func _generate_unique_key(text: String) -> String:
@@ -156,7 +204,6 @@ func _save_flash() -> void:
 	save_indicator.modulate.a = 1.0
 	tween.tween_property(save_indicator, "modulate:a", 0.0, 1.5)
 	tween.tween_callback(func(): save_indicator.visible = false)
-	EventBus.save_icon_shown.emit()
 
 
 func _on_save_flash() -> void:
@@ -182,7 +229,13 @@ func _show_lock_message(key: String) -> void:
 	print("[DocumentEditor] Locked entry: %s — %s" % [key, WorldState.get_text(key)])
 
 
-## 🔥 FIX #4: unified event naming — consistent verb_object format
+func _delete_everything() -> void:
+	MetaMemory.record_event("deleted_world")
+	WorldState.delete_all()
+	SaveManager.quick_save()
+	GameProgress.trigger_ending(GameProgress.Ending.EMPTINESS)
+
+
 func _record_deletion_event(key: String) -> void:
 	match key:
 		"lera_exists":
@@ -194,6 +247,8 @@ func _record_deletion_event(key: String) -> void:
 			GameProgress.trigger_ending(GameProgress.Ending.SACRIFICE)
 		"crime_exists":
 			MetaMemory.record_event("removed_crime")
+		"disease_exists":
+			MetaMemory.record_event("removed_disease")
 		"school_exists":
 			MetaMemory.record_event("destroyed_school")
 		"billboard_exists":
@@ -212,6 +267,16 @@ func _record_deletion_event(key: String) -> void:
 ## ── ENDING CHECKS ──────────────────────────────────────────────────
 
 func _check_endings() -> void:
+	if WorldState.is_active("maxim_feared") and WorldState.is_active("free_will_missing"):
+		MetaMemory.record_event("became_dictator")
+		GameProgress.trigger_ending(GameProgress.Ending.DICTATOR)
+		return
+
+	if WorldState.is_active("utopia_cracks") and WorldState.is_active("disease_vanished") and WorldState.is_active("crime_vanished"):
+		MetaMemory.record_event("perfect_utopia")
+		GameProgress.trigger_ending(GameProgress.Ending.UTOPIA_COLLAPSE)
+		return
+
 	# Emptiness: nothing visible left
 	var has_visible := false
 	for key in WorldState.entries:

@@ -12,6 +12,7 @@ signal document_opened()
 signal document_closed()
 signal day_passed(day_number: int)
 signal scene_changed(from_scene: String, to_scene: String)
+signal ending_reached(ending_id: String)
 
 # Character events
 signal character_appeared(character_id: String, scene_id: String)
@@ -27,3 +28,4 @@ signal world_version_changed(from_version: int, to_version: int)
 signal typing_effect_finished()
 signal screen_glitched(duration: float)
 signal save_icon_shown()
+signal world_message_shown(text: String)

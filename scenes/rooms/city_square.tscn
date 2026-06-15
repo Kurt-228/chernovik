@@ -36,6 +36,64 @@ horizontal_alignment = 1
 vertical_alignment = 1
 theme_override_font_sizes/font_size = 16
 
+[node name="Nina" type="ColorRect" parent="."]
+position = Vector2(1050, 390)
+size = Vector2(42, 66)
+color = Color(0.45, 0.1, 0.5, 1.0)
+metadata/_depends_on = "nina_exists"
+
+[node name="NinaBadge" type="Label" parent="Nina"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+text = "Н"
+horizontal_alignment = 1
+vertical_alignment = 1
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(1.0, 0.8, 1.0, 1.0)
+
+[node name="NinaLabel" type="Label" parent="Nina"]
+position = Vector2(-30, 72)
+text = "Нина"
+theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(1.0, 0.75, 1.0, 1.0)
+
+[node name="DroughtWarning" type="ColorRect" parent="."]
+position = Vector2(250, 520)
+size = Vector2(180, 70)
+color = Color(0.45, 0.35, 0.12, 1.0)
+metadata/_depends_on = "drought_warning"
+
+[node name="DroughtLabel" type="Label" parent="DroughtWarning"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+text = "Воды почти нет"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PerfectOrderBanner" type="ColorRect" parent="."]
+position = Vector2(760, 140)
+size = Vector2(260, 90)
+color = Color(0.82, 0.82, 0.86, 1.0)
+metadata/_depends_on = "perfect_order"
+
+[node name="PerfectOrderLabel" type="Label" parent="PerfectOrderBanner"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+text = "ИДЕАЛЬНЫЙ\nПОРЯДОК"
+horizontal_alignment = 1
+vertical_alignment = 1
+theme_override_colors/font_color = Color(0.08, 0.08, 0.1, 1.0)
+
+[node name="CrackMark" type="ColorRect" parent="."]
+position = Vector2(860, 245)
+size = Vector2(36, 190)
+rotation = 0.25
+color = Color(0.02, 0.02, 0.03, 1.0)
+metadata/_depends_on = "utopia_cracks"
+
 [node name="BusStop" type="ColorRect" parent="."]
 position = Vector2(700, 400)
 size = Vector2(80, 50)

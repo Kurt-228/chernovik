@@ -51,6 +51,14 @@ func _load_rules() -> void:
 			]
 		},
 
+		"disease_exists": {
+			on_remove = [
+				{add = "disease_vanished", text = "Болезни исчезли из города"},
+				{add = "hospitals_empty", text = "Больницы опустели за одну ночь"},
+				{add = "doctors_lost_purpose", text = "Врачи не понимают, зачем учились спасать людей", delay = 2},
+			]
+		},
+
 		# ── POLICE ──
 		"police_works": {
 			on_remove = [
@@ -66,10 +74,33 @@ func _load_rules() -> void:
 			]
 		},
 
+		"street_name_mira": {
+			on_remove = [
+				{add = "street_name_missing", text = "Название улицы исчезло со всех табличек"},
+				{add = "people_forget_addresses", text = "Жители путают адреса, которыми пользовались всю жизнь"},
+			]
+		},
+
 		# ── ETERNAL SUMMER (player adds this) ──
 		"eternal_summer": {
 			on_add = [
 				{add = "drought_warning", text = "Водохранилища начали пересыхать", delay = 5},
+				{add = "weather_static", text = "Погода застыла — больше нет ни дождя, ни ветра"},
+			]
+		},
+
+		"maxim_rich": {
+			on_add = [
+				{add = "class_envy", text = "Одноклассники смотрят на Максима с завистью"},
+				{add = "artyom_suspicious", text = "Артём уверен, что Максим что-то скрывает", delay = 1},
+			]
+		},
+
+		"teacher_returned": {
+			on_add = [
+				{add = "teacher_exists", text = "В школе №17 работает учитель истории Сергей Павлович"},
+				{add = "wrong_teacher", text = "Учитель вернулся, но помнит другой класс"},
+				{add = "school_records_changed", text = "Школьные журналы переписались сами собой", delay = 1},
 			]
 		},
 
@@ -107,6 +138,13 @@ func _load_rules() -> void:
 			]
 		},
 
+		"teacher_exists": {
+			on_remove = [
+				{add = "teacher_vanished", text = "Учитель истории исчез из расписания и памяти учеников"},
+				{add = "history_lessons_empty", text = "Кабинет истории пустует", delay = 1},
+			]
+		},
+
 		# ── ECONOMY ──
 		"economy_normal": {
 			on_remove = [
@@ -119,6 +157,28 @@ func _load_rules() -> void:
 		"author_unknown": {
 			on_remove = [
 				{add = "author_revealed", text = "Автор документа раскрыт"},
+			]
+		},
+
+		"author_revealed": {
+			on_add = [
+				{add = "author_notes_visible", text = "В документе появились заметки предыдущего Автора"},
+				{add = "maxim_program", text = "Максим является программой внутри документа", delay = 1},
+			]
+		},
+
+		"perfect_city": {
+			on_add = [
+				{add = "perfect_order", text = "Город стал идеально чистым и послушным"},
+				{add = "people_stop_arguing", text = "Люди перестали спорить даже о важном"},
+				{add = "utopia_cracks", text = "Идеальный город начал трескаться по краям", delay = 3},
+			]
+		},
+
+		"all_obey_maxim": {
+			on_add = [
+				{add = "maxim_feared", text = "Все боятся расстроить Максима"},
+				{add = "free_will_missing", text = "Люди улыбаются до того, как понимают почему"},
 			]
 		},
 

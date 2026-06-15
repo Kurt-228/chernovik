@@ -62,10 +62,53 @@ text = "Нажми ✕ чтобы удалить строку из реальн�
 theme_override_font_sizes/font_size = 12
 theme_override_colors/font_color = Color(0.35, 0.35, 0.45, 1.0)
 
+[node name="QuickActions" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 30.0
+offset_top = 116.0
+offset_right = 1890.0
+offset_bottom = 152.0
+theme_override_constants/separation = 8
+
+[node name="QuickSummerButton" type="Button" parent="QuickActions"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Вечное лето"
+
+[node name="QuickRichButton" type="Button" parent="QuickActions"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Сделать Максима богатым"
+
+[node name="QuickTeacherButton" type="Button" parent="QuickActions"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Вернуть учителя"
+
+[node name="QuickTruthButton" type="Button" parent="QuickActions"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Раскрыть автора"
+
+[node name="QuickHealthButton" type="Button" parent="QuickActions"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Убрать болезни"
+
+[node name="QuickPerfectButton" type="Button" parent="QuickActions"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Идеальный город"
+
+[node name="QuickObeyButton" type="Button" parent="QuickActions"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Все подчиняются"
+
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
 layout_mode = 0
 offset_left = 30.0
-offset_top = 120.0
+offset_top = 160.0
 offset_right = 1890.0
 offset_bottom = 820.0
 
@@ -96,6 +139,34 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "+ Добавить"
 custom_minimum_size = Vector2(120, 36)
+
+[node name="FinalBar" type="HBoxContainer" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+offset_left = 30.0
+offset_top = 895.0
+offset_right = 1890.0
+offset_bottom = 940.0
+theme_override_constants/separation = 8
+
+[node name="AuthorButton" type="Button" parent="FinalBar"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Стать Автором"
+custom_minimum_size = Vector2(180, 40)
+
+[node name="FreedomButton" type="Button" parent="FinalBar"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Оставить мир без автора"
+custom_minimum_size = Vector2(240, 40)
+
+[node name="VoidButton" type="Button" parent="FinalBar"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Удалить весь документ"
+custom_minimum_size = Vector2(230, 40)
 
 [node name="SaveIndicator" type="ColorRect" parent="."]
 unique_name_in_owner = true

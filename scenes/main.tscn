@@ -1,7 +1,8 @@
-[gd_scene format=3 uid="uid://dye8ieht8ih4r"]
+[gd_scene load_steps=4 format=3 uid="uid://dye8ieht8ih4r"]
 
 [ext_resource type="Script" uid="uid://bi7b1vshfnftv" path="res://scripts/core/SceneManager.gd" id="1"]
 [ext_resource type="Script" uid="uid://cekgvdt83u0rw" path="res://scripts/ui/DialogueOverlay.gd" id="2"]
+[ext_resource type="PackedScene" path="res://scenes/ui/game_hud.tscn" id="3"]
 
 [node name="Main" type="Node" unique_id=2038153327]
 script = ExtResource("1")
@@ -17,6 +18,8 @@ color = Color(0, 0, 0, 0)
 
 [node name="DialogueOverlay" type="CanvasLayer" parent="." unique_id=1493908056]
 script = ExtResource("2")
+
+[node name="GameHUD" parent="." instance=ExtResource("3")]
 
 [node name="DialogueBox" type="Panel" parent="DialogueOverlay" unique_id=531354232]
 unique_name_in_owner = true

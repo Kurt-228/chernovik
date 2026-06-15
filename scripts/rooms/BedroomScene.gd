@@ -47,6 +47,11 @@ func _open_document() -> void:
 	var doc_scene = load("res://scenes/ui/document_editor.tscn")
 	var doc = doc_scene.instantiate()
 	doc.name = "DocumentOverlay"
+	doc.tree_exited.connect(func():
+		document_open = false
+		player.set_process(true)
+		player.set_physics_process(true)
+	)
 	add_child(doc)
 
 	# Pause player movement

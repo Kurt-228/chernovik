@@ -23,9 +23,9 @@ func _on_new_game() -> void:
 	Consequences.reset()
 	MetaMemory.current_run_events.clear()
 	MetaMemory.current_run_endings.clear()
-	get_tree().change_scene_to_file("res://scenes/rooms/bedroom.tscn")
+	get_tree().change_scene_to_file("res://scenes/main.tscn")
 
 
 func _on_continue() -> void:
 	if SaveManager.load_game():
-		get_tree().change_scene_to_file("res://scenes/rooms/bedroom.tscn")
+		get_tree().change_scene_to_file("res://scenes/main.tscn")

@@ -1,25 +1,90 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=4 format=3]
 
-[ext_resource type="Script" path="res://scripts/core/ExplorationScene.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/core/PlayerController.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/rooms/ReactiveScene.gd" id="2"]
+
+[sub_resource type="RectangleShape2D" id="rect_small"]
+size = Vector2(40, 60)
 
 [node name="AbandonedApartment" type="Node2D"]
-script = ExtResource("1")
-scene_id = "abandoned_apartment"
-scene_name = "Заброшенная квартира"
+script = ExtResource("2")
 
-[node name="SceneSprites" type="Node2D" parent="."]
-
-[node name="Background" type="ColorRect" parent="SceneSprites"]
+[node name="Background" type="ColorRect" parent="."]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-color = Color(0.08, 0.06, 0.1, 1.0)
+color = Color(0.08, 0.07, 0.1, 1.0)
 
-[node name="Laptop" type="Sprite2D" parent="SceneSprites"]
-position = Vector2(960, 540)
+[node name="TitleLabel" type="Label" parent="."]
+position = Vector2(20, 96)
+text = "ЗАБРОШЕННАЯ КВАРТИРА"
+theme_override_font_sizes/font_size = 28
+theme_override_colors/font_color = Color(0.88, 0.84, 0.78, 1.0)
+
+[node name="Laptop" type="ColorRect" parent="."]
+position = Vector2(840, 430)
+size = Vector2(240, 140)
+color = Color(0.03, 0.04, 0.06, 1.0)
 metadata/_depends_on = "document_found"
 
-[node name="NPCs" type="Node2D" parent="."]
+[node name="LaptopLabel" type="Label" parent="Laptop"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+text = "старый ноутбук\nЧерновик_мира_v27.doc"
+horizontal_alignment = 1
+vertical_alignment = 1
+theme_override_colors/font_color = Color(0.45, 0.95, 0.55, 1.0)
+
+[node name="AuthorNotes" type="ColorRect" parent="."]
+position = Vector2(1180, 260)
+size = Vector2(260, 180)
+color = Color(0.18, 0.15, 0.1, 1.0)
+metadata/_depends_on = "author_notes_visible"
+
+[node name="AuthorNotesLabel" type="Label" parent="AuthorNotes"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+text = "Заметки Автора:\n\"Максим должен\nисправить мир\""
+horizontal_alignment = 1
+vertical_alignment = 1
+theme_override_font_sizes/font_size = 16
+
+[node name="ErrorPersonMarker" type="ColorRect" parent="."]
+position = Vector2(520, 430)
+size = Vector2(52, 82)
+color = Color(0.55, 0.04, 0.06, 1.0)
+metadata/_depends_on = "maxim_truth_revealed"
+
+[node name="ErrorLabel" type="Label" parent="ErrorPersonMarker"]
+position = Vector2(-45, 90)
+text = "Ошибка помнит тебя"
+theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(1.0, 0.55, 0.55, 1.0)
 
 [node name="Player" type="CharacterBody2D" parent="."]
 position = Vector2(960, 700)
+script = ExtResource("1")
+
+[node name="PlayerSprite" type="ColorRect" parent="Player"]
+position = Vector2(-20, -30)
+size = Vector2(40, 60)
+color = Color(0.3, 0.5, 0.8, 1.0)
+
+[node name="PlayerLabel" type="Label" parent="Player/PlayerSprite"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+text = "Я"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
+shape = SubResource("rect_small")
+
+[node name="HintLabel" type="Label" parent="."]
+position = Vector2(20, 136)
+text = "Здесь найден ноутбук. Открой документ через верхнюю панель и меняй строки мира."
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.55, 0.55, 0.65, 1.0)

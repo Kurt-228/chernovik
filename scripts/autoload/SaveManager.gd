@@ -32,6 +32,7 @@ func save_game(slot: int = 0) -> bool:
 		"entry_order":      WorldState.entry_order.duplicate(),
 		"edit_history":     WorldState.edit_history.duplicate(),
 		"current_day":      GameProgress.current_day,
+		"current_scene":    GameProgress.current_scene_id,
 		"current_chapter":  GameProgress.current_chapter,
 		"dialogue_seen":    GameProgress.dialogue_seen.duplicate(),
 		"nina_met":         GameProgress.nina_met,
@@ -52,6 +53,7 @@ func save_game(slot: int = 0) -> bool:
 
 	current_save_slot = slot
 	print("[SaveManager] Saved to slot %d (%s)" % [slot, path])
+	EventBus.save_icon_shown.emit()
 	return true
 
 
@@ -81,6 +83,7 @@ func load_game(slot: int = 0) -> bool:
 	_deserialize_and_apply(json)
 	current_save_slot = slot
 	print("[SaveManager] Loaded slot %d" % slot)
+	EventBus.world_message_shown.emit("Сохранение загружено")
 	return true
 
 
@@ -107,8 +110,15 @@ func _serialize_entries() -> Dictionary:
 func _deserialize_and_apply(data: Dictionary) -> void:
 	WorldState.current_version  = data.get("version", WorldState.STARTING_VERSION)
 	WorldState.edits_made       = data.get("edits_made", 0)
-	WorldState.entry_order       = data.get("entry_order", [])
-	WorldState.edit_history      = data.get("edit_history", [])
+
+	WorldState.entry_order.clear()
+	for key in data.get("entry_order", []):
+		WorldState.entry_order.append(str(key))
+
+	WorldState.edit_history.clear()
+	for record in data.get("edit_history", []):
+		if record is Dictionary:
+			WorldState.edit_history.append(record)
 
 	# Rebuild entries
 	WorldState.entries.clear()
@@ -123,14 +133,38 @@ func _deserialize_and_apply(data: Dictionary) -> void:
 			"meta":   e.get("meta", {})
 		}
 
+	_migrate_loaded_world()
+
 	# Restore GameProgress
 	GameProgress.current_day      = data.get("current_day", 1)
+	GameProgress.current_scene_id = data.get("current_scene", "bedroom")
 	GameProgress.current_chapter  = data.get("current_chapter", GameProgress.Chapter.PROLOGUE)
 	GameProgress.dialogue_seen    = data.get("dialogue_seen", {})
 	GameProgress.nina_met         = data.get("nina_met", false)
 	GameProgress.errors_appeared  = data.get("errors_appeared", false)
 	GameProgress.truth_revealed   = data.get("truth_revealed", false)
 	GameProgress.first_edit_done  = WorldState.edits_made > 0
+	EventBus.world_version_changed.emit(WorldState.current_version, WorldState.current_version)
+
+
+func _migrate_loaded_world() -> void:
+	_ensure_loaded_entry("street_name_mira", "Улица Мира называется улицей Мира")
+	_ensure_loaded_entry("teacher_exists", "В школе №17 работает учитель истории Сергей Павлович")
+	_ensure_loaded_entry("disease_exists", "Люди в городе могут болеть")
+
+
+func _ensure_loaded_entry(key: String, text: String) -> void:
+	if WorldState.entries.has(key):
+		return
+	WorldState.entries[key] = {
+		"text": text,
+		"active": true,
+		"hidden": false,
+		"locked": false,
+		"meta": {"migrated": true}
+	}
+	if key not in WorldState.entry_order:
+		WorldState.entry_order.append(key)
 
 
 ## Does a save exist?

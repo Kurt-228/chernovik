@@ -28,6 +28,7 @@ func _ready() -> void:
 	# Subscribe to world changes
 	EventBus.world_entry_removed.connect(_on_entry_removed)
 	EventBus.world_entry_added.connect(_on_entry_added)
+	EventBus.world_version_changed.connect(func(_from_version: int, _to_version: int): _apply_world_state())
 
 	# Apply initial state
 	_apply_world_state()

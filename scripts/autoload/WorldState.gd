@@ -24,9 +24,6 @@ var player_knows_truth: bool = false
 # Has the player seen their own entry?
 var player_saw_own_entry: bool = false
 
-# Being-processed guard — prevents re-entrant cascade during a single edit cycle
-var _edit_in_progress: bool = false
-
 # Entry property constants
 const PROP_TEXT   := "text"
 const PROP_ACTIVE := "active"
@@ -48,9 +45,11 @@ func _load_default_world() -> void:
 	_add_internal("city_founded",       "Город основан в 1847 году")
 	_add_internal("city_name",          "Название города: Северск")
 	_add_internal("billboard_exists",   "На центральной площади стоит большой рекламный экран")
+	_add_internal("street_name_mira",    "Улица Мира называется улицей Мира")
 	_add_internal("old_bus_stop",       "На улице Мира есть старая автобусная остановка")
 	_add_internal("weather_normal",     "В городе обычная погода — дождь и солнце сменяют друг друга")
 	_add_internal("school_exists",      "В городе есть школа №17")
+	_add_internal("teacher_exists",     "В школе №17 работает учитель истории Сергей Павлович")
 
 	# === CHARACTERS ===
 	_add_internal("lera_exists",        "Лера существует")
@@ -77,6 +76,7 @@ func _load_default_world() -> void:
 
 	# === SOCIETY ===
 	_add_internal("crime_exists",      "В городе существует преступность")
+	_add_internal("disease_exists",    "Люди в городе могут болеть")
 	_add_internal("police_works",      "Полиция выполняет свою работу")
 	_add_internal("economy_normal",    "Экономика города функционирует нормально")
 
@@ -186,12 +186,6 @@ func _record_and_emit(action: String, key: String, arg1 := "", arg2 := "") -> vo
 	edit_history.append(record)
 	edits_made += 1
 
-	# Centralized: emit via EventBus, Consequences listens
-	if _edit_in_progress:
-		return  # prevent re-entrant cascade
-
-	_edit_in_progress = true
-
 	match action:
 		"added":
 			EventBus.world_entry_added.emit(key, arg1)
@@ -199,9 +193,6 @@ func _record_and_emit(action: String, key: String, arg1 := "", arg2 := "") -> vo
 			EventBus.world_entry_removed.emit(key)
 		"modified":
 			EventBus.world_entry_modified.emit(key, arg1, arg2)
-
-	# Process cascade AFTER the primary event
-	_edit_in_progress = false
 
 
 ## ── QUERIES ────────────────────────────────────────────────────────
@@ -300,7 +291,6 @@ func reset_world() -> void:
 	edit_history.clear()
 	player_knows_truth = false
 	player_saw_own_entry = false
-	_edit_in_progress = false
 	_load_default_world()
 	EventBus.world_version_changed.emit(STARTING_VERSION, STARTING_VERSION)
 

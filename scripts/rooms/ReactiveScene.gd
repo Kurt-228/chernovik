@@ -11,6 +11,7 @@ func _ready() -> void:
 	_scan_reactive_children(self)
 	EventBus.world_entry_removed.connect(_on_entry_removed)
 	EventBus.world_entry_added.connect(_on_entry_added)
+	EventBus.world_version_changed.connect(func(_from_version: int, _to_version: int): _apply_initial_state())
 	_apply_initial_state()
 
 
